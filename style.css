@@ -1,0 +1,4 @@
+body>main>div.container {
+    justify-self: center;
+    display: grid;
+}
