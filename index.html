@@ -1,26 +1,51 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
     <head>
+        <meta charset="utf-8">
         <title>Brainfuck</title>
         <link href="style.css" rel="stylesheet">
         <script src="gui.js"></script>
         <script src="run.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <main>
-            <div class="code">
+            <div class="block code">
                 Code
-                <div class="text" contenteditable="true">
-                    OHH
+                <div class="text code" contenteditable="true">
+                    ++++++++++[>+>+++>+++++++>++++++++++&lt;&lt;&lt;&lt;-]>>>++.>+.+++++++..+++.&lt;&lt;++.>+++++++++++++++.>.+++.------.--------.
                 </div>
             </div>
-            <div class="debug" style="display: none;">
-                pass.
+            <div class="line">
+                <button id="copy">copy</button>
+                <span class="placeholder"></span>
+                <button id="debug">debug</button>
+                <button id="run">run</button>
             </div>
-            <div class="io">
+            <!-- <div class="debug" style="display: none;"> -->
+            <div class="block debug">
+                <button class="move left">◀</button>
+                <div class="cells">
+                    <span class="cell" id="NaN">
+                        <div class="id">NaN</div>
+                        <div class="box">
+                            <div class="number">123</div>
+                            <div class="char">\n</div>
+                        </div>
+                    </span>
+                </div>
+                <button class="move right">▶</button>
+            </div>
+            <div class="block io">
                 Output
                 <div class="output">
-                    <div class="text">
+                    <div class="text output">
+                        
+                    </div>
+                </div>
+                Input
+                <div class="output">
+                    <div class="text input">
                         
                     </div>
                 </div>

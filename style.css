@@ -1,22 +1,59 @@
+/* "width: -webkit-fill-available;" means: "width: stretch;"*/
+
 body {
     background-color: #111111;
     color: #eeeeee;
 }
 
 main {
-    max-width: 800px;
-    width: stretch;
+    max-width: 850px;
+    width: -webkit-fill-available;
     justify-self: center;
-    display: grid;
+    display: block;
 }
-main>div {
-    width: stretch;
-    margin: 1em 0;
+main > div.block {
+    width: -webkit-fill-available;
+    margin: 1em 0px;
 }
 div.text {
     background-color: #333333;
-    width: stretch;
+    width: -webkit-fill-available;
     padding: 5px;
     border-radius: 4px;
     min-height: 23px;
+}
+
+div.line {
+    display: flex;
+}
+span.placeholder {
+    width: -webkit-fill-available;
+}
+
+
+div.cells {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+div.debug > button.move {
+    position: absolute;
+}
+div.debug > button.move.left {
+    right: 5px;
+}
+div.debug > button.move.right {
+    left: 5px;
+}
+span.cell {
+    min-width: 50px
+}
+span.cell div {
+    width: min-content;
+    margin: auto;
+}
+span.cell > div.box {
+    width: 50px;
+    height: 50px;
+    border: 2px #eeeeee;
 }
