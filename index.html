@@ -11,43 +11,65 @@
     <body>
         <main>
             <div class="block code">
-                Code
-                <div class="text code" contenteditable="true">
+                <div class="line">
+                    Code
+                    <button id="open">open</button>
+                    <button id="save">save</button>
+                    <button id="copy">copy</button>
+                </div>
+                <div class="text full code" contenteditable="true">
                     ++++++++++[>+>+++>+++++++>++++++++++&lt;&lt;&lt;&lt;-]>>>++.>+.+++++++..+++.&lt;&lt;++.>+++++++++++++++.>.+++.------.--------.
                 </div>
             </div>
             <div class="line">
-                <button id="copy">copy</button>
                 <span class="placeholder"></span>
                 <button id="debug">debug</button>
                 <button id="run">run</button>
             </div>
             <!-- <div class="debug" style="display: none;"> -->
             <div class="block debug">
-                <button class="move left">◀</button>
-                <div class="cells">
-                    <span class="cell" id="NaN">
-                        <div class="id">NaN</div>
-                        <div class="box">
-                            <div class="number">123</div>
-                            <div class="char">\n</div>
-                        </div>
+                size:
+                <button class="size sub">-</button>
+                <span class="text" contenteditable="true">50</span>
+                <button class="size add">+</button>
+                <div class="line">
+                    speed:
+                    <button class="size sub">-</button>
+                    <span class="text" contenteditable="true">3</span>
+                    <button class="size add">+</button>
+                </div>
+                <div class="line-of-cells">
+                    <button class="move left">◀</button>
+                    <span class="cells">
+                        <span class="cell" id="314">
+                            <div class="id">314</div>
+                            <div class="box">
+                                <div class="num">123</div>
+                                <div class="char">\n</div>
+                            </div>
+                        </span>
                     </span>
+                    <button class="move right">▶</button>
                 </div>
-                <button class="move right">▶</button>
             </div>
-            <div class="block io">
-                Output
-                <div class="output">
-                    <div class="text output">
-                        
-                    </div>
+            <div class="block output">
+                <div class="line">
+                    Output
+                    <span class="placeholder"></span>
+                    <button class="char-code output">code</button>
                 </div>
-                Input
-                <div class="output">
-                    <div class="text input">
+                <div class="text full output">
                         
-                    </div>
+                </div>
+            </div>
+            <div class="block input">
+                <div class="line">
+                    Input
+                    <span class="placeholder"></span>
+                    <button class="char-code output">code</button>
+                </div>
+                <div class="text full input">
+                        
                 </div>
             </div>
         </main>

@@ -6,7 +6,7 @@ body {
 }
 
 main {
-    max-width: 850px;
+    max-width: 800px;
     width: -webkit-fill-available;
     justify-self: center;
     display: block;
@@ -15,14 +15,21 @@ main > div.block {
     width: -webkit-fill-available;
     margin: 1em 0px;
 }
-div.text {
+div.text.full, span.text {
     background-color: #333333;
-    width: -webkit-fill-available;
-    padding: 5px;
+    /* width: -webkit-fill-available; */
     border-radius: 4px;
+}
+div.text {
     min-height: 23px;
+    padding: 5px;
 }
 
+div.line-of-cells {
+    margin: 0 -30px;
+    display: grid;
+    grid-template-columns: auto 800px auto;
+}
 div.line {
     display: flex;
 }
@@ -31,19 +38,11 @@ span.placeholder {
 }
 
 
-div.cells {
-    overflow: hidden;
+span.cells {
+    width: 800px;
+    overflow: hidden visible;/*y=visible acts like auto with x=hidden.*/
     display: flex;
     justify-content: center;
-}
-div.debug > button.move {
-    position: absolute;
-}
-div.debug > button.move.left {
-    right: 5px;
-}
-div.debug > button.move.right {
-    left: 5px;
 }
 span.cell {
     min-width: 50px
@@ -53,7 +52,22 @@ span.cell div {
     margin: auto;
 }
 span.cell > div.box {
-    width: 50px;
-    height: 50px;
-    border: 2px #eeeeee;
+    width: 48px;
+    height: 46px;
+    border: #eeeeee solid;
+    border-width: 2px 1px;
+}
+span.cell.hidden {
+    visibility: hidden;
+}
+span.cell div.id {
+    color: #777777;
+}
+span.cell div.num {
+    font-size: 20px;
+    font-weight: bold;
+}
+span.cell div.char {
+    font-size: 10px;
+    color: #bbbbbb;
 }
