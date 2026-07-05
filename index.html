@@ -21,25 +21,18 @@
                     ++++++++++[>+>+++>+++++++>++++++++++&lt;&lt;&lt;&lt;-]>>>++.>+.+++++++..+++.&lt;&lt;++.>+++++++++++++++.>.+++.------.--------.
                 </div>
             </div>
-            <div class="line">
-                <span class="placeholder"></span>
-                <button id="debug">debug</button>
-                <button id="run">run</button>
-            </div>
+            <!-- <div class="line"> -->
+                <button id="run" class="right">run</button>
+                <button id="debug" class="right">debug</button>
+            <!-- </div> -->
+            <span class="line-break"></span>
             <!-- <div class="debug" style="display: none;"> -->
             <div class="block debug">
-                size:
-                <button class="size sub">-</button>
-                <span class="text" contenteditable="true">50</span>
-                <button class="size add">+</button>
-                <div class="line">
-                    speed:
-                    <button class="size sub">-</button>
-                    <span class="text" contenteditable="true">3</span>
-                    <button class="size add">+</button>
-                </div>
+                <label>size:
+                    <input id="size" type="number" title="size of boxes" value="50" min="1" max="300">
+                </label>
                 <div class="line-of-cells">
-                    <button class="move left">◀</button>
+                    <button class="move" id="move-left">◀</button>
                     <span class="cells">
                         <span class="cell" id="314">
                             <div class="id">314</div>
@@ -47,27 +40,39 @@
                                 <div class="num">123</div>
                                 <div class="char">\n</div>
                             </div>
+                            <div class="pointer"><!-- ▲ --></div>
                         </span>
                     </span>
-                    <button class="move right">▶</button>
+                    <button class="move" id="move-right">▶</button>
                 </div>
+                <!-- <div class="line"> -->
+                    <div class="absolute-position">
+                        <label for="stick" class="left">stick
+                            <input id="stick" type="checkbox" title="Stick the tape so that the pointer moves on the screen.">
+                        </label>
+                        <label for="speed" class="right">speed:
+                            <input id="speed" type="number" value="3" min="0" max="100000" title="running speed">
+                        </label>
+                    </div>
+                    <div class="line">
+                        <!-- <span class="placeholder"></span> -->
+                        <button class="debugger mid-left" id="debug-back">◁</button>
+                        <button class="debugger" id="debug-pause"><!-- || -->▶</button>
+                        <button class="debugger mid-right" id="debug-next">▷</button>
+                        <!-- <span class="placeholder"></span> -->
+                    </div>
+                <!-- </div> -->
             </div>
             <div class="block output">
-                <div class="line">
-                    Output
-                    <span class="placeholder"></span>
-                    <button class="char-code output">code</button>
-                </div>
+                Output
+                <button class="char-code output right">code</button>
                 <div class="text full output">
                         
                 </div>
             </div>
             <div class="block input">
-                <div class="line">
-                    Input
-                    <span class="placeholder"></span>
-                    <button class="char-code output">code</button>
-                </div>
+                Input
+                <button class="char-code input right">code</button>
                 <div class="text full input">
                         
                 </div>

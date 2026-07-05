@@ -1,12 +1,15 @@
 /* "width: -webkit-fill-available;" means: "width: stretch;"*/
 
+:root {
+    --width: 800px;
+}
 body {
     background-color: #111111;
     color: #eeeeee;
 }
 
 main {
-    max-width: 800px;
+    max-width: var(--width);
     width: -webkit-fill-available;
     justify-self: center;
     display: block;
@@ -28,10 +31,37 @@ div.text {
 div.line-of-cells {
     margin: 0 -30px;
     display: grid;
-    grid-template-columns: auto 800px auto;
+    grid-template-columns: auto var(--width) auto;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
 }
 div.line {
     display: flex;
+    align-items: start;
+}
+/* div.line + * {
+    clear: both;
+} */
+span.line-break + * {
+    clear: both;
+}
+.mid-left {
+    margin-left: auto;
+}
+.mid-right {
+    margin-right: auto;
+}
+.mid {
+    margin: auto;
+}
+div.absolute-position {
+    position: absolute;
+    max-width: var(--width);
+    width: -webkit-fill-available;
 }
 span.placeholder {
     width: -webkit-fill-available;
@@ -39,7 +69,7 @@ span.placeholder {
 
 
 span.cells {
-    width: 800px;
+    width: var(--width);
     overflow: hidden visible;/*y=visible acts like auto with x=hidden.*/
     display: flex;
     justify-content: center;
@@ -70,4 +100,8 @@ span.cell div.num {
 span.cell div.char {
     font-size: 10px;
     color: #bbbbbb;
+}
+span.cell div.pointer {
+    font-size: 16px;
+    height: 23px;
 }
