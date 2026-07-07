@@ -23,7 +23,7 @@
             </div>
             <!-- <div class="line"> -->
                 <button id="run" class="right">run</button>
-                <button id="debug" class="right">debug</button>
+                <button id="debug" class="right" title="Show the tape of cells.">debug</button>
             <!-- </div> -->
             <span class="line-break"></span>
             <!-- <div class="debug" style="display: none;"> -->
@@ -35,10 +35,10 @@
                     <button class="move" id="move-left">◀</button>
                     <span class="cells">
                         <span class="cell" id="314">
-                            <div class="id">314</div>
+                            <div class="id" title="cell id">314</div>
                             <div class="box">
-                                <div class="num">123</div>
-                                <div class="char">\n</div>
+                                <div class="num" title="the number held by the cell">123</div>
+                                <div class="char" title="the ASCII character represented by the number">\n</div>
                             </div>
                             <div class="pointer"><!-- ▲ --></div>
                         </span>
@@ -57,7 +57,7 @@
                     <div class="line">
                         <!-- <span class="placeholder"></span> -->
                         <button class="debugger mid-left" id="debug-back">◁</button>
-                        <button class="debugger" id="debug-pause"><!-- || -->▶</button>
+                        <button class="debugger" id="debug-pause"><!-- ⏸︎ -->▶</button>
                         <button class="debugger mid-right" id="debug-next">▷</button>
                         <!-- <span class="placeholder"></span> -->
                     </div>
@@ -65,17 +65,18 @@
             </div>
             <div class="block output">
                 Output
-                <button class="char-code output right">code</button>
+                <button class="char-code output right" title="Show character codes">code</button>
                 <div class="text full output">
                         
                 </div>
             </div>
             <div class="block input">
                 Input
-                <button class="char-code input right">code</button>
+                <button class="char-code input right" title="Show character codes">code</button>
                 <div class="text full input">
                         
                 </div>
+                <button class="submit-one right" title="Submit one input.">&crarr;</button>
             </div>
         </main>
     </body>
