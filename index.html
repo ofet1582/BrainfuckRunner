@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>Brainfuck</title>
         <link href="style.css" rel="stylesheet">
-        <script src="gui.js"></script>
+        <script defer src="gui.js"></script>
         <script src="run.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -17,17 +17,18 @@
                     <button id="save">save</button>
                     <button id="copy">copy</button>
                 </div>
-                <div class="text full code" contenteditable="true">
+                <div class="text full code" id="code-box" contenteditable="true">
                     ++++++++++[>+>+++>+++++++>++++++++++&lt;&lt;&lt;&lt;-]>>>++.>+.+++++++..+++.&lt;&lt;++.>+++++++++++++++.>.+++.------.--------.
+                    annotation
                 </div>
             </div>
             <!-- <div class="line"> -->
-                <button id="run" class="right">run</button>
-                <button id="debug" class="right" title="Show the tape of cells.">debug</button>
+                <button id="run-button" class="right">run</button>
+                <button id="debug-button" class="right" title="Show the tape of cells.">debug</button>
             <!-- </div> -->
-            <span class="line-break"></span>
-            <!-- <div class="debug" style="display: none;"> -->
-            <div class="block debug">
+            <div class="line-break"></div>
+            <div class="block debug none-display">
+            <!-- <div class="block debug"> -->
                 <label>size:
                     <input id="size" type="number" title="size of boxes" value="50" min="1" max="300">
                 </label>
@@ -47,8 +48,8 @@
                 </div>
                 <!-- <div class="line"> -->
                     <div class="absolute-position">
-                        <label for="stick" class="left">stick
-                            <input id="stick" type="checkbox" title="Stick the tape so that the pointer moves on the screen.">
+                        <label for="stick" class="left" title="Stick the tape so that the pointer moves on the screen.">stick
+                            <input id="stick" type="checkbox">
                         </label>
                         <label for="speed" class="right">speed:
                             <input id="speed" type="number" value="3" min="0" max="100000" title="running speed">
@@ -72,6 +73,9 @@
             </div>
             <div class="block input">
                 Input
+                &emsp;
+                <label for="lock-button" title="The inputs won't be submitted unless you use the &crarr; button.">lock
+                    <input id="lock-button" type="checkbox"></label>
                 <button class="char-code input right" title="Show character codes">code</button>
                 <div class="text full input">
                         

@@ -2,10 +2,24 @@
 
 :root {
     --width: 800px;
+
+    --bg-color: #111111;
+    --text-color: #eeeeee;
+    --texteara-color: #333333;
+    --box-color: #eeeeee;
+    --id-color: #777777;
+    --char-color: #bbbbbb;
+
+    --bracket-0-color: #ffff7f;
+    --bracket-1-color: #ff7fff;
+    --bracket-2-color: #7f7fff;
+    --highlight-color: #608060;
+    --annotation-color: #7f7f7f;
+    --unmatched-color: #ff0000;
 }
 body {
-    background-color: #111111;
-    color: #eeeeee;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 main {
@@ -18,8 +32,11 @@ main > div.block {
     width: -webkit-fill-available;
     margin: 1em 0px;
 }
+div.none-display {
+    display: none;
+}
 div.text.full, span.text {
-    background-color: #333333;
+    background-color: var(--texteara-color);
     /* width: -webkit-fill-available; */
     border-radius: 4px;
 }
@@ -46,7 +63,7 @@ div.line {
 /* div.line + * {
     clear: both;
 } */
-span.line-break + * {
+div.line-break {
     clear: both;
 }
 .mid-left {
@@ -84,14 +101,14 @@ span.cell div {
 span.cell > div.box {
     width: 48px;
     height: 46px;
-    border: #eeeeee solid;
+    border: var(--box-color) solid;
     border-width: 2px 1px;
 }
 span.cell.hidden {
     visibility: hidden;
 }
 span.cell div.id {
-    color: #777777;
+    color: var(--id-color);
 }
 span.cell div.num {
     font-size: 20px;
@@ -99,9 +116,28 @@ span.cell div.num {
 }
 span.cell div.char {
     font-size: 10px;
-    color: #bbbbbb;
+    color: var(--char-color);
 }
 span.cell div.pointer {
     font-size: 16px;
     height: 23px;
+}
+
+div#code-box > span.bracket-0 {
+    color: var(--bracket-0-color);
+}
+div#code-box > span.bracket-1 {
+    color: var(--bracket-1-color);
+}
+div#code-box > span.bracket-2 {
+    color: var(--bracket-2-color);
+}
+div#code-box > span.highlight {
+    background-color: var(--highlight-color);
+}
+div#code-box > span.annotation {
+    color: var(--annotation-color);
+}
+div#code-box > span.unmatched {
+    color: var(--unmatched-color);
 }
