@@ -1,9 +1,17 @@
 "use strict";
 
+
+var debug = false;
+var stick = false;
+// var quick = false; //useless in this ver.
+var cells_number = 17;
+var cells = [];
+var origin = -8;
+
 const code_box = document.querySelector("div#code-box");
 var code = code_box.innerText;
-
 code_box.addEventListener("input", function(event) {
+    log(event);
     const type = event.inputType;
     if (type === "insertText") {
         const char = event.data;
@@ -11,14 +19,26 @@ code_box.addEventListener("input", function(event) {
     code = code_box.innerText;
 });
 
-var debug = false;
-var div_debug = document.querySelector("div.block.debug");
-var debug_button = document.querySelector("button#debug-button");
-
+const div_debug = document.querySelector("div.block.debug");
+const debug_button = document.querySelector("button#debug-button");
 debug_button.addEventListener("click", function() {
     div_debug.classList.toggle("none-display", debug);
     debug = !debug;
 });
+
+const left_button = document.querySelector("button#move-left");
+const right_button = document.querySelector("button#move-right");
+left_button.addEventListener("click", function() {
+    origin--;
+    show_tape();
+})
+right_button.addEventListener("click", function() {
+    origin++;
+    show_tape();
+})
+
+
+const cells_eara = document.querySelector("span.cells");
 
 function toHTMLstring(str) {
     let r = ""// return
@@ -38,10 +58,74 @@ function toHTMLstring(str) {
 }
 
 function format_codebox() {
-    parsed = parse(code);
     code_box.innerHTML = "";
     let part;
     for (part of parsed.parts) {
         code_box.appendChild(part.toHTML());
     }
 }
+
+function init_cells() {
+    let cell, id, box, pointer, num, char;
+    cells_eara.replaceChildren();
+    for (let i = 0; i < cells_number; i++) {
+        cell = document.createElement("span");
+        cell.classList.add("cell");
+            id = document.createElement("div");
+            id.classList.add("id");
+            id.innerHTML = "0";
+            cell.appendChild(id);
+            
+            box = document.createElement("div");
+            box.classList.add("box");
+                num = document.createElement("div");
+                num.classList.add("num");
+                num.innerHTML = "0";
+                box.appendChild(num);
+
+                char = document.createElement("div");
+                char.classList.add("char");
+                char.innerHTML = "^@";
+                box.append(char);
+            cell.append(box);
+
+            pointer = document.createElement("div");
+            pointer.classList.add("pointer");
+            pointer.innerHTML = "";
+            cell.append(pointer);
+        cells_eara.appendChild(cell);
+        cells.push({
+            cell: cell,
+            id: id,
+            num: num,
+            char: char,
+            pointer: pointer
+        })
+    }
+}
+
+function show_tape() {
+    let cell;
+    let id;
+    for (let i = 0; i < cells_number; i++) {
+        id = origin + i;
+        cell = cells[i];
+        if (id < 0 || id > MAX) {
+            cell.cell.classList.toggle("hidden", true);
+        } else {
+            cell.cell.classList.toggle("hidden", false);
+            cell.id.innerHTML = id;
+            num = tape[id];
+            num = ! num ? 0 : num;
+            cell.num.innerHTML = num;
+            // cell.char.innerHTML = 
+            cell.pointer.innerHTML = id === pointer ? "▲" : "";
+        }
+    }
+}
+
+parsed = parse(code);
+format_codebox();
+init_cells();
+init();
+show_tape();

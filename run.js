@@ -2,20 +2,22 @@
 
 var log = console.log;
 
-var tape;
-var pointer;
+const MAX = 30000 - 1;
+
+var tape, pointer, index, num, order, last;
 var bracket;
 var id_counter = 0;// an unique id for every [ and ]
+var output = [];
 
 var parsed;
 
-const chars = ["+", "-", "<", ">", ".", ",", "[", "]"];
+const chars = ["+", "-", ">", "<", ".", ",", "[", "]"];
 
 class Part {
-    constructor(type, number = 1 /* for + - < > . , */, id, partner, partner_position, level, value /* for annotations */) {
+    constructor(type, number = 1 /* for + - > < . , */, id, partner, partner_position, level, value /* for annotations */) {
         /*
         type == 0: +, type == 1: -,
-        type == 2: <, type == 3: >,
+        type == 2: >, type == 3: <,
         type == 4: ., type == 5: ,,
         type == 6: [, type == 7: ],
         type == -1: annotation
@@ -40,22 +42,36 @@ class Part {
 
     toHTML() {
         const HTML = document.createElement("span");
-        HTML.classList.add(`char${this.type}`);
-        if (this.type === 6 || this.type === 7) {
-            if (!this.unmatched) {
-                HTML.classList.add(`bracket-${this.level % 3}`);
-            } else {
-                HTML.classList.add('unmatched');
+        switch (this.type) {
+            case 0: case 1: case 2: case 3: case 4: case 5: {
+                HTML.classList.add(`char${this.type}`);
+                HTML.classList.add(`number${this.number}`);
+                HTML.innerHTML = this.str;
+                break;
             }
-        }
-        if (this.type === -1) {
-            HTML.classList.add("annotation");
-            HTML.innerHTML = toHTMLstring(this.str);
-        } else {
-            HTML.innerHTML = this.str;
+            case 6: case 7: {
+                HTML.classList.add(`char${this.type}`);
+                HTML.classList.add(
+                    this.unmatched ? "unmatched" : `bracket-${this.level % 3}`
+                );
+                HTML.innerHTML = this.str;
+                break;
+            }
+            case -1: {
+                HTML.classList.add("annotation");
+                HTML.innerHTML = toHTMLstring(this.str);
+                break;
+            }
         }
         this.HTML = HTML;
         return HTML;
+    }
+
+    current() {
+        this.HTML.classList.add("current");
+    }
+    noncurrent() {
+        this.HTML.classList.remove("current");
     }
 }
 
@@ -87,7 +103,7 @@ function parse(code) {
                 value = undefined;
             }
         }
-        if (char === "+" || char === "-" || char === "<" || char === ">" || char === "." || char === ",") {
+        if (char === "+" || char === "-" || char === ">" || char === "<" || char === "." || char === ",") {
             type = chars.indexOf(char);
             last = char; 
             number = 1;
@@ -130,6 +146,124 @@ function parse(code) {
 }
 
 function init() {
-    tape = [1];
+    parsed = parse(code);
+    format_codebox();
+    tape = [0];
     pointer = 0;
+    index = 0;
+    // num = 0;
+    order = parsed.parts[0];
+    last = undefined;
 }
+
+function next() {
+    last?.noncurrent();
+    order.current();
+    last = order;
+    for(index++; index < parsed.parts.length; index++) {
+        order = parsed.parts[index];
+        if (order.type !== -1) {
+            return;
+        }
+    }
+    order = 0;
+}
+
+function step() {
+    // log(order.HTML);
+    switch (order.type) {
+        case 0: { // +
+            tape[pointer] = (tape[pointer] + order.number) % 256;
+            next();
+            break;
+        }
+        case 1: { // -
+            tape[pointer] = (tape[pointer] - order.number) % 256;
+            next();
+            break;
+        }
+        case 2: { // >
+            pointer += order.number;
+            if (pointer > MAX) {
+                pointer = MAX;
+            }
+            if (! tape[pointer]){
+                tape[pointer] = 0;
+            }
+            if (! stick) {
+                origin += order.number;
+                if (origin > MAX) {
+                    origin = MAX;
+                }
+            }
+            next();
+            break;
+        }
+        case 3: { // <
+            pointer -= order.number;
+            if (pointer < 0) {
+                pointer = 0;
+            }
+            if (! tape[pointer]){
+                tape[pointer] = 0;
+            }
+            if (! stick) {
+                origin -= order.number;
+                if (origin < 0) {
+                    origin = 0;
+                }
+            }
+            next();
+            break;
+        }
+        case 4: { // .
+            // Output
+            log(tape[pointer], order.number);
+            next();
+            break;
+        }
+        case 5: { // ,
+            // Input
+            log("input", order.number);
+            next();
+            break;
+
+        }
+        case 6: { // [
+            if (tape[pointer]) {
+                next();
+                break;
+            }
+            last?.noncurrent();
+            order.current();
+            last = order;
+            index = order.partner_position;
+            order = parsed.parts[index];
+            break;
+        }
+        case 7: {
+            if (! tape[pointer]) {
+                next();
+                break;
+            }
+            last?.noncurrent();
+            order.current();
+            last = order;
+            index = order.partner_position;
+            order = parsed.parts[index];
+            break;
+        }
+    }
+    // log(tape);
+    if (debug) {
+        show_tape();
+    }
+}
+
+/* function run() {
+    const parts = parsed.parts;
+    let n;
+    for (let index = 0; index < parts.length; index++) {
+        
+    }
+} */

@@ -16,6 +16,7 @@
     --highlight-color: #608060;
     --annotation-color: #7f7f7f;
     --unmatched-color: #ff0000;
+    --current-color: #555555;
 }
 body {
     background-color: var(--bg-color);
@@ -140,4 +141,7 @@ div#code-box > span.annotation {
 }
 div#code-box > span.unmatched {
     color: var(--unmatched-color);
+}
+div#code-box span.current {
+    background-color: var(--current-color)
 }
