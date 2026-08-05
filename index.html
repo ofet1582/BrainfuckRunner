@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>Brainfuck</title>
         <link href="style.css" rel="stylesheet">
+        <script src="chars.js"></script>
         <script defer src="gui.js"></script>
         <script src="run.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,7 +63,7 @@
                         <input id="stick" type="checkbox">
                     </label>
                     <label class="auto-left-margin" title="running speed">speed:
-                        <input id="speed" type="number" value="3" min="0" max="100000">
+                        <input id="speed" type="number" value="5" min="0" max="100000">
                     </label>
                 </div>
                 <div class="line">
@@ -76,7 +77,7 @@
             <div class="block output">
                 Output
                 <button class="char-code output right-float" title="Show character codes">code</button>
-                <div class="text full output">
+                <div class="text full output" id="output-area">
                         
                 </div>
             </div>

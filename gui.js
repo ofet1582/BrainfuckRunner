@@ -4,10 +4,15 @@
 var debug = false;
 var stick = false;
 // var quick = false; //useless in this ver.
+var output_mode = 0;// string.
 var cells_number = 17;
 var cells_half_id = (cells_number - 1) / 2; // 8.
 var cells = [];
-var origin = -8;
+var origin = -cells_half_id;
+
+var speed = 2000 // 1s / delay
+
+var chars = unicode;
 
 const code_box = document.querySelector("div#code-box");
 var code = code_box.innerText;
@@ -40,7 +45,7 @@ right_button.addEventListener("click", function() {
     show_tape();
 })
 const mid_cell_input = document.querySelector("input#mid-cell");
-mid_cell_input.addEventListener("blur", function(event) {
+mid_cell_input.addEventListener("change", function(event) {
     origin = parseInt(mid_cell_input.value) - cells_half_id;
     show_tape();
 });
@@ -50,6 +55,28 @@ stick_checkbox.addEventListener("change", function() {
     stick = stick_checkbox.checked;
 });
 const cells_eara = document.querySelector("span.cells");
+
+const speed_input = document.querySelector("input#speed");
+speed_input.addEventListener("change", function() {
+    let speed_number = parseFloat(speed_input.value);
+    if (speed_number > 0) {
+        speed = 1000 / speed_number;
+    } else {
+        speed = 0;
+        speed_input.value = 0;
+    }
+    if (intervalID) {
+        clearInterval(intervalID);
+        intervalID = setInterval(step, speed);
+    }
+})
+
+var output_area = document.querySelector("div#output-area");
+
+const run_button = document.querySelector("button#run-button");
+run_button.addEventListener("click", function() {
+    run();
+})
 
 function toHTMLstring(str) {
     let r = ""// return
@@ -129,14 +156,45 @@ function show_tape() {
             num = tape[id];
             num = ! num ? 0 : num;
             cell.num.innerHTML = num;
-            // cell.char.innerHTML = 
+            cell.char.innerHTML = chars[num].symbol;
+            if (chars[num].explain) {
+                cell.char.title = chars[num].explain;
+            }
             cell.pointer.innerHTML = id === pointer ? "▲" : "";
         }
     }
 }
 
-parsed = parse(code);
-format_codebox();
+function output(char_number, number) {
+    outputs.push(char_number);
+    let char = chars[char_number]
+    switch (output_mode) {
+        case 0: {
+            switch (char.type) {
+                case 1:
+                case 2: {
+                    output_area.innerHTML += char.symbol.repeat(number);
+                    break;
+                }
+                case 0: {
+                    switch (char_number) {
+                        case 10: {
+                            output_area.innerHTML += '<br>'.repeat(number);
+                        }
+                    }
+                }
+            }
+            break;
+        }
+    }
+}
+
+function end() {
+    if (intervalID) {
+        clearInterval(intervalID);
+        intervalID = undefined;
+    }
+}
 init_cells();
 init();
 show_tape();

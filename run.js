@@ -7,11 +7,13 @@ const MAX = 30000 - 1;
 var tape, pointer, index, num, order, last;
 var bracket;
 var id_counter = 0;// an unique id for every [ and ]
-var output = [];
+var outputs = [];
 
 var parsed;
 
-const chars = ["+", "-", ">", "<", ".", ",", "[", "]"];
+var intervalID;// of the run loop.
+
+const operators = ["+", "-", ">", "<", ".", ",", "[", "]"];
 
 class Part {
     constructor(type, number = 1 /* for + - > < . , */, id, partner, partner_position, level, value /* for annotations */) {
@@ -25,13 +27,13 @@ class Part {
         this.type = type;
         if (type === 0 || type === 1 || type === 2 || type === 3 || type === 4 || type === 5) {
             this.number = number;
-            this.char = chars[type];
+            this.char = operators[type];
             this.str = this.char.repeat(number);
         } else if (type === 6 || type === 7) {
             this.id = id;
             this.partner = partner;
             this.partner_position = partner_position;
-            this.char = chars[type];
+            this.char = operators[type];
             this.str = this.char;
             this.level = level;
             this.unmatched = false;// default.
@@ -95,7 +97,7 @@ function parse(code) {
                 number = undefined;
             }
         } else if (value) {
-            if (!chars.includes(char)) {
+            if (!operators.includes(char)) {
                 value += char;
                 continue;
             } else {
@@ -104,7 +106,7 @@ function parse(code) {
             }
         }
         if (char === "+" || char === "-" || char === ">" || char === "<" || char === "." || char === ",") {
-            type = chars.indexOf(char);
+            type = operators.indexOf(char);
             last = char; 
             number = 1;
         } else if (char === "[") {
@@ -126,7 +128,7 @@ function parse(code) {
             left.partner = id_counter;
             left.partner_position = parts.length;
             parts.push(new Part(7, undefined, id_counter++, left.id, left_position, stack.length))
-        } else if (!chars.includes(char)) {
+        } else if (!operators.includes(char)) {
             value = char;
         }
     }
@@ -148,12 +150,14 @@ function parse(code) {
 function init() {
     parsed = parse(code);
     format_codebox();
+    output_area.replaceChildren()
     tape = [0];
     pointer = 0;
     index = 0;
     // num = 0;
     order = parsed.parts[0];
     last = undefined;
+    origin = -cells_half_id;
 }
 
 function next() {
@@ -167,6 +171,7 @@ function next() {
         }
     }
     order = 0;
+    end();
 }
 
 function step() {
@@ -178,11 +183,12 @@ function step() {
             break;
         }
         case 1: { // -
-            tape[pointer] = (tape[pointer] - order.number) % 256;
+            tape[pointer] = ((tape[pointer] - order.number) % 256 + 256) % 256;
             next();
             break;
         }
         case 2: { // >
+            let last_pointer = pointer;
             pointer += order.number;
             if (pointer > MAX) {
                 pointer = MAX;
@@ -190,16 +196,14 @@ function step() {
             if (! tape[pointer]){
                 tape[pointer] = 0;
             }
-            if (! stick) {
-                origin += order.number;
-                if (origin > MAX) {
-                    origin = MAX;
-                }
+            if (debug && ! stick) {
+                origin += pointer - last_pointer;
             }
             next();
             break;
         }
         case 3: { // <
+            let last_pointer = pointer;
             pointer -= order.number;
             if (pointer < 0) {
                 pointer = 0;
@@ -207,18 +211,15 @@ function step() {
             if (! tape[pointer]){
                 tape[pointer] = 0;
             }
-            if (! stick) {
-                origin -= order.number;
-                if (origin < 0) {
-                    origin = 0;
-                }
+            if (debug && ! stick) {
+                origin += pointer - last_pointer;
             }
             next();
             break;
         }
         case 4: { // .
             // Output
-            log(tape[pointer], order.number);
+            output(tape[pointer], order.number);
             next();
             break;
         }
@@ -260,10 +261,13 @@ function step() {
     }
 }
 
-/* function run() {
-    const parts = parsed.parts;
-    let n;
-    for (let index = 0; index < parts.length; index++) {
-        
+function run() {
+    init()
+    if (debug) {
+        intervalID = setInterval(step, speed);
+    } else {
+        while (order) {
+            step();
+        }
     }
-} */
+}
