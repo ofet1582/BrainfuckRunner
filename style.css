@@ -28,6 +28,7 @@ main {
     width: -webkit-fill-available;
     justify-self: center;
     display: block;
+    margin: auto 35px;
 }
 main > div.block {
     width: -webkit-fill-available;
@@ -47,14 +48,31 @@ div.text {
 }
 
 div.line-of-cells {
-    margin: 0 -30px;
+    /* margin: 0 -30px;
     display: grid;
-    grid-template-columns: auto var(--width) auto;
+    grid-template-columns: auto var(--width) auto; */
+    display: flex;
 }
-.left {
+.zero-width {
+    width: 0;
+}
+.zero-height {
+    height: 0;
+}
+button#move-left {
+    float: right;
+}
+button.move {
+    height: 100%
+}
+input#mid-cell {
+    width: 50px;
+}
+
+.left-float {
     float: left;
 }
-.right {
+.right-float {
     float: right;
 }
 div.line {
@@ -67,27 +85,34 @@ div.line {
 div.line-break {
     clear: both;
 }
-.mid-left {
+.auto-left-margin {
     margin-left: auto;
 }
-.mid-right {
+.auto-right-margin {
     margin-right: auto;
 }
-.mid {
+.auto-both-margin {
     margin: auto;
+}
+/* .absolute-position {
+    position: absolute;
 }
 div.absolute-position {
     position: absolute;
     max-width: var(--width);
     width: -webkit-fill-available;
-}
+} */
+/* div.block-display {
+    display: block;
+} */
 span.placeholder {
     width: -webkit-fill-available;
 }
 
 
 span.cells {
-    width: var(--width);
+    max-width: var(--width);
+    width: -webkit-fill-available;
     overflow: hidden visible;/*y=visible acts like auto with x=hidden.*/
     display: flex;
     justify-content: center;

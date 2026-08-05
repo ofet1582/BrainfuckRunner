@@ -13,7 +13,7 @@
             <div class="block code">
                 <div class="line">
                     Code
-                    <button id="open">open</button>
+                    <button class="auto-left-margin" id="open">open</button>
                     <button id="save">save</button>
                     <button id="copy">copy</button>
                 </div>
@@ -22,18 +22,27 @@
                     annotation
                 </div>
             </div>
-            <!-- <div class="line"> -->
-                <button id="run-button" class="right">run</button>
-                <button id="debug-button" class="right" title="Show the tape of cells.">debug</button>
-            <!-- </div> -->
+            <div class="line">
+                <button class="auto-left-margin" id="debug-button" class="auto-left-margin" title="Show the tape of cells.">debug</button>
+                <button id="run-button">run</button>
+            </div>
             <div class="line-break"></div>
             <div class="block debug none-display">
             <!-- <div class="block debug"> -->
-                <label>size:
-                    <input id="size" type="number" title="size of boxes" value="50" min="1" max="300">
-                </label>
+                <div class="zero-height">
+                    <label class="zero-width" title="size of boxes">size:
+                        <input id="size" type="number" value="50" min="1" max="300">
+                    </label>
+                </div>
+                <div class="line">
+                    <!-- <span class="placeholder"></span> -->
+                    <input type="number" class="auto-both-margin" id="mid-cell" min="0" max="29999" title="the index of the cell in the middle of the screen" value="0">
+                    <!-- <span class="placeholder"></span> -->
+                </div>
                 <div class="line-of-cells">
-                    <button class="move" id="move-left">◀</button>
+                    <span class="zero-width">
+                        <button class="move" id="move-left">◀</button>
+                    </span>
                     <span class="cells">
                         <span class="cell" id="314">
                             <div class="id" title="cell id">314</div>
@@ -44,29 +53,29 @@
                             <div class="pointer"><!-- ▲ --></div>
                         </span>
                     </span>
-                    <button class="move" id="move-right">▶</button>
+                    <span class="zero-width">
+                        <button class="move" id="move-right">▶</button>
+                    </span>
                 </div>
-                <!-- <div class="line"> -->
-                    <div class="absolute-position">
-                        <label for="stick" class="left" title="Stick the tape so that the pointer moves on the screen.">stick
-                            <input id="stick" type="checkbox">
-                        </label>
-                        <label for="speed" class="right">speed:
-                            <input id="speed" type="number" value="3" min="0" max="100000" title="running speed">
-                        </label>
-                    </div>
-                    <div class="line">
-                        <!-- <span class="placeholder"></span> -->
-                        <button class="debugger mid-left" id="debug-back">◁</button>
-                        <button class="debugger" id="debug-pause"><!-- ⏸︎ -->▶</button>
-                        <button class="debugger mid-right" id="debug-next">▷</button>
-                        <!-- <span class="placeholder"></span> -->
-                    </div>
-                <!-- </div> -->
+                <div class="zero-height line">
+                    <label title="Stick the tape so that the pointer moves on the screen.">stick
+                        <input id="stick" type="checkbox">
+                    </label>
+                    <label class="auto-left-margin" title="running speed">speed:
+                        <input id="speed" type="number" value="3" min="0" max="100000">
+                    </label>
+                </div>
+                <div class="line">
+                    <!-- <span class="placeholder"></span> -->
+                    <button class="debugger auto-left-margin" id="debug-back">◁</button>
+                    <button class="debugger" id="debug-pause"><!-- ⏸︎ -->▶</button>
+                    <button class="debugger auto-right-margin" id="debug-next">▷</button>
+                    <!-- <span class="placeholder"></span> -->
+                </div>
             </div>
             <div class="block output">
                 Output
-                <button class="char-code output right" title="Show character codes">code</button>
+                <button class="char-code output right-float" title="Show character codes">code</button>
                 <div class="text full output">
                         
                 </div>
@@ -74,13 +83,14 @@
             <div class="block input">
                 Input
                 &emsp;
-                <label for="lock-button" title="The inputs won't be submitted unless you use the &crarr; button.">lock
-                    <input id="lock-button" type="checkbox"></label>
-                <button class="char-code input right" title="Show character codes">code</button>
+                <label title="The inputs won't be submitted unless you use the &crarr; button.">lock
+                    <input id="lock-button" type="checkbox">
+                </label>
+                <button class="char-code input right-float" title="Show character codes">code</button>
                 <div class="text full input">
                         
                 </div>
-                <button class="submit-one right" title="Submit one input.">&crarr;</button>
+                <button class="submit-one right-float" title="Submit one input.">&crarr;</button>
             </div>
         </main>
     </body>

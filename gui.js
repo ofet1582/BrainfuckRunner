@@ -5,6 +5,7 @@ var debug = false;
 var stick = false;
 // var quick = false; //useless in this ver.
 var cells_number = 17;
+var cells_half_id = (cells_number - 1) / 2; // 8.
 var cells = [];
 var origin = -8;
 
@@ -30,14 +31,24 @@ const left_button = document.querySelector("button#move-left");
 const right_button = document.querySelector("button#move-right");
 left_button.addEventListener("click", function() {
     origin--;
+    mid_cell_input.value = origin + cells_half_id;
     show_tape();
 })
 right_button.addEventListener("click", function() {
     origin++;
+    mid_cell_input.value = origin + cells_half_id;
     show_tape();
 })
+const mid_cell_input = document.querySelector("input#mid-cell");
+mid_cell_input.addEventListener("blur", function(event) {
+    origin = parseInt(mid_cell_input.value) - cells_half_id;
+    show_tape();
+});
 
-
+const stick_checkbox = document.querySelector("input#stick");
+stick_checkbox.addEventListener("change", function() {
+    stick = stick_checkbox.checked;
+});
 const cells_eara = document.querySelector("span.cells");
 
 function toHTMLstring(str) {
