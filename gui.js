@@ -16,7 +16,7 @@ var chars = unicode;
 
 const code_box = document.querySelector("div#code-box");
 var code = code_box.innerText;
-code_box.addEventListener("input", function(event) {
+code_box.addEventListener("beforeinput", function(event) {
     log(event);
     const type = event.inputType;
     if (type === "insertText") {
@@ -159,6 +159,8 @@ function show_tape() {
             cell.char.innerHTML = chars[num].symbol;
             if (chars[num].explain) {
                 cell.char.title = chars[num].explain;
+            } else {
+                cell.char.removeAttribute("title");
             }
             cell.pointer.innerHTML = id === pointer ? "▲" : "";
         }
@@ -194,6 +196,8 @@ function end() {
         clearInterval(intervalID);
         intervalID = undefined;
     }
+    last?.noncurrent();
+    code_box.setAttribute("contenteditable", true);
 }
 init_cells();
 init();

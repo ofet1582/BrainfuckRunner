@@ -161,8 +161,10 @@ function init() {
 }
 
 function next() {
-    last?.noncurrent();
-    order.current();
+    if (debug) {
+        last?.noncurrent();
+        order.current();
+    }
     last = order;
     for(index++; index < parsed.parts.length; index++) {
         order = parsed.parts[index];
@@ -235,8 +237,10 @@ function step() {
                 next();
                 break;
             }
-            last?.noncurrent();
-            order.current();
+            if (debug) {
+                last?.noncurrent();
+                order.current();
+            }
             last = order;
             index = order.partner_position;
             order = parsed.parts[index];
@@ -247,8 +251,10 @@ function step() {
                 next();
                 break;
             }
-            last?.noncurrent();
-            order.current();
+            if (debug) {
+                last?.noncurrent();
+                order.current();
+            }
             last = order;
             index = order.partner_position;
             order = parsed.parts[index];
@@ -263,6 +269,7 @@ function step() {
 
 function run() {
     init()
+    code_box.setAttribute("contenteditable", false);
     if (debug) {
         intervalID = setInterval(step, speed);
     } else {
