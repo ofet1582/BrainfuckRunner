@@ -10,7 +10,7 @@ var cells_half_id = (cells_number - 1) / 2; // 8.
 var cells = [];
 var origin = -cells_half_id;
 
-var speed = 2000 // 1s / delay
+var speed = 200 // 1s / delay
 
 var chars = unicode;
 
