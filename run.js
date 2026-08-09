@@ -43,37 +43,52 @@ class Part {
     }
 
     toHTML() {
-        const HTML = document.createElement("span");
+        const HTMLs = [];
+        let HTML;
         switch (this.type) {
             case 0: case 1: case 2: case 3: case 4: case 5: {
-                HTML.classList.add(`char${this.type}`);
-                HTML.classList.add(`number${this.number}`);
-                HTML.innerHTML = this.str;
+                for (let i = 0; i < this.number; i++) {
+                    HTML = document.createElement("span");
+                    HTML.classList.add(`char${this.type}`);
+                    HTML.classList.add(`number${this.number}`);
+                    HTML.innerHTML = this.char;
+                    HTMLs.push(HTML);
+                }
                 break;
             }
             case 6: case 7: {
+                HTML = document.createElement("span");
                 HTML.classList.add(`char${this.type}`);
                 HTML.classList.add(
                     this.unmatched ? "unmatched" : `bracket-${this.level % 3}`
                 );
                 HTML.innerHTML = this.str;
+                HTMLs.push(HTML);
                 break;
             }
             case -1: {
-                HTML.classList.add("annotation");
-                HTML.innerHTML = toHTMLstring(this.str);
+                for (let c of this.str) {
+                    HTML = document.createElement("span");
+                    HTML.classList.add("annotation");
+                    HTML.innerHTML = toHTMLchar(c);
+                    HTMLs.push(HTML);
+                }
                 break;
             }
         }
-        this.HTML = HTML;
-        return HTML;
+        this.HTMLs = HTMLs;
+        return HTMLs;
     }
 
     current() {
-        this.HTML.classList.add("current");
+        for (let html of this.HTMLs) {
+            html.classList.add("current");
+        }
     }
     noncurrent() {
-        this.HTML.classList.remove("current");
+        for (let html of this.HTMLs) {
+            html.classList.remove("current");
+        }
     }
 }
 

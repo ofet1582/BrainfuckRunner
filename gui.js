@@ -14,16 +14,41 @@ var speed = 200 // 1s / delay
 
 var chars = unicode;
 
+var selection = window.getSelection();
+var range;
+
 const code_box = document.querySelector("div#code-box");
 var code = code_box.innerText;
 code_box.addEventListener("beforeinput", function(event) {
     log(event);
+    // event.preventDefault();
+    // log(window.getSelection());
     const type = event.inputType;
-    if (type === "insertText") {
-        const char = event.data;
+    // log(type);
+    // selection = window.getSelection();
+    if (selection.rangeCount != 1) {
+        log("How?", selection);
+        return;
+    }
+    range = selection.getRangeAt(0);
+    switch (type) {
+        case "insertText": {
+            if (event.data === "[" && ! range.Collapsed) {
+                event.preventDefault();
+                //
+            }
+            break;
+        }
     }
     code = code_box.innerText;
 });
+code_box.addEventListener("input", function(event) {
+    let new_range;
+    log(event);
+    format_codebox();
+    selection.removeAllRanges();
+    selection.addRange(range);
+})
 
 const div_debug = document.querySelector("div.block.debug");
 const debug_button = document.querySelector("button#debug-button");
@@ -78,28 +103,39 @@ run_button.addEventListener("click", function() {
     run();
 })
 
+
+const HTMLchars = {
+    "\n": "<br>"
+}
+
 function toHTMLstring(str) {
     let r = ""// return
-    let c;
+    let c, cH;
     for (c of str) {
-        switch (c) {
-            case "\n": {
-                r += "<br>";
-                break;
-            }
-            default: {
-                r += c;
-            }
+        cH = HTMLchars[c];
+        if (! cH) {
+            cH = c;
         }
+        r += cH
+    }
+    return r;
+}
+
+function toHTMLchar(char) {
+    let r = HTMLchars[char];
+    if (! r) {
+        r = char;
     }
     return r;
 }
 
 function format_codebox() {
     code_box.innerHTML = "";
-    let part;
+    let part, html;
     for (part of parsed.parts) {
-        code_box.appendChild(part.toHTML());
+        for (html of part.toHTML()) {
+        code_box.appendChild(html);
+        }
     }
 }
 
