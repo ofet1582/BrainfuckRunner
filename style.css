@@ -1,7 +1,8 @@
 /* "width: -webkit-fill-available;" means: "width: stretch;"*/
 
 :root {
-    --width: 800px;
+    --width: 1200px;
+    --code-box-max-height: 200px;
 
     --bg-color: #111111;
     --text-color: #eeeeee;
@@ -45,6 +46,10 @@ div.text.full, span.text {
 div.text {
     min-height: 23px;
     padding: 5px;
+}
+div#code-box {
+    max-height: var(--code-box-max-height);
+    overflow-y: scroll;
 }
 
 div.line-of-cells {

@@ -109,3 +109,12 @@ const unicode = [];
 // 导出（在 Node.js 或浏览器模块中可用）
 // export default unicode;
 // 若在全局作用域，直接使用 unicode 即可
+
+
+function control_char(symbol, number) {
+    switch (symbol) {
+        case "LF": {
+            output_area.innerHTML += '<br>'.repeat(number);
+        }
+    }
+}

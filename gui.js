@@ -5,8 +5,8 @@ var debug = false;
 var stick = false;
 // var quick = false; //useless in this ver.
 var output_mode = 0;// string.
-var cells_number = 17;
-var cells_half_id = (cells_number - 1) / 2; // 8.
+var cells_number = 25;
+var cells_half_id = (cells_number - 1) / 2; // 12.
 var cells = [];
 var origin = -cells_half_id;
 
@@ -179,11 +179,7 @@ function output(char_number, number) {
                     break;
                 }
                 case 0: {
-                    switch (char_number) {
-                        case 10: {
-                            output_area.innerHTML += '<br>'.repeat(number);
-                        }
-                    }
+                    control_char(char.symbol, number);
                 }
             }
             break;
