@@ -13,42 +13,73 @@ var origin = -cells_half_id;
 var speed = 200 // 1s / delay
 
 var chars = unicode;
-
-var selection = window.getSelection();
-var range;
-
+// var range_positions;
 const code_box = document.querySelector("div#code-box");
 var code = code_box.innerText;
-code_box.addEventListener("beforeinput", function(event) {
-    log(event);
-    // event.preventDefault();
-    // log(window.getSelection());
-    const type = event.inputType;
-    // log(type);
-    // selection = window.getSelection();
+/* code_box.addEventListener("beforeinput", function(event) {
+    // log(event);
+    let selection = window.getSelection();
     if (selection.rangeCount != 1) {
-        log("How?", selection);
-        return;
+        log("WTF?!!")
     }
-    range = selection.getRangeAt(0);
-    switch (type) {
+    let range = selection.getRangeAt(0);
+    let startContainer = range.startContainer;
+    let endContainer = range.endContainer;
+    if (! startContainer.container_Part || ! endContainer.container_Part) {
+        log("wtf?????!!!!!");
+    }
+    switch (event.inputType) {
         case "insertText": {
-            if (event.data === "[" && ! range.Collapsed) {
-                event.preventDefault();
-                //
-            }
-            break;
+
         }
     }
-    code = code_box.innerText;
-});
+}); */
+
+
 code_box.addEventListener("input", function(event) {
-    let new_range;
-    log(event);
+    /* let selection = window.getSelection();
+    let range;
+    let start, end;
+    let start_part, end_part;
+    let starts = [];
+    let ends = [];
+    for (let i = 0; i < selection.rangeCount; i++) {
+        range = selection.getRangeAt(i);
+        log(range.startContainer);
+        start_part = parsed.parts[range.startContainer.id]; // string --JS--> number
+        log(start_part);
+        start = start_part.string_position + range.startOffset;
+        end_part = parsed.parts[range.endContainer.id]; // string --JS--> number
+        end = end_part.string_position + range.endOffset;
+        starts.push(start);
+        ends.push(end);
+    }
     format_codebox();
-    selection.removeAllRanges();
-    selection.addRange(range);
+    selection.removeAllRanges(); // is it necessary?
+    let containers = [];
+    for (let part of varsed.parts) {
+        for (let s of starts) {
+            if (part.string_position <= s < part.string_position + part.number) {
+                containers[s] = part;
+            }
+        }
+        for (let e of ends) {
+            if (part.string_position <= e < part.string_position + part.number) {
+                containers[e] = part;
+            }
+        }
+    }
+    for (let i = 0; i < starts.length; i++) {
+        range = document.createRange();
+        start = containers[starts[i]];
+        end = containers[ends[i]]
+        range.setStart(start.HTML, starts[i] - start.string_position);
+        range.setEnd(end.HTML, ends[i] - end.string_position);
+        selection.addRange(range);
+    } */
+    code = code_box.innerText;
 })
+
 
 const div_debug = document.querySelector("div.block.debug");
 const debug_button = document.querySelector("button#debug-button");
@@ -103,39 +134,28 @@ run_button.addEventListener("click", function() {
     run();
 })
 
-
-const HTMLchars = {
-    "\n": "<br>"
-}
-
 function toHTMLstring(str) {
     let r = ""// return
-    let c, cH;
+    let c;
     for (c of str) {
-        cH = HTMLchars[c];
-        if (! cH) {
-            cH = c;
+        switch (c) {
+            case "\n": {
+                r += "<br>";
+                break;
+            }
+            default: {
+                r += c;
+            }
         }
-        r += cH
-    }
-    return r;
-}
-
-function toHTMLchar(char) {
-    let r = HTMLchars[char];
-    if (! r) {
-        r = char;
     }
     return r;
 }
 
 function format_codebox() {
     code_box.innerHTML = "";
-    let part, html;
+    let part;
     for (part of parsed.parts) {
-        for (html of part.toHTML()) {
-        code_box.appendChild(html);
-        }
+        code_box.appendChild(part.toHTML());
     }
 }
 

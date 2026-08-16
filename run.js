@@ -16,7 +16,7 @@ var intervalID;// of the run loop.
 const operators = ["+", "-", ">", "<", ".", ",", "[", "]"];
 
 class Part {
-    constructor(type, number = 1 /* for + - > < . , */, id, partner, partner_position, level, value /* for annotations */) {
+    constructor(type, number = 1 /* for + - > < . , */, string_position, list_index, id, partner, partner_position, level, value /* for annotations */) {
         /*
         type == 0: +, type == 1: -,
         type == 2: >, type == 3: <,
@@ -25,6 +25,8 @@ class Part {
         type == -1: annotation
         */
         this.type = type;
+        this.string_position = string_position;
+        this.list_index = list_index;
         if (type === 0 || type === 1 || type === 2 || type === 3 || type === 4 || type === 5) {
             this.number = number;
             this.char = operators[type];
@@ -37,58 +39,47 @@ class Part {
             this.str = this.char;
             this.level = level;
             this.unmatched = false;// default.
+            this.number = 1;
         } else if (type === -1) {
             this.str = value;
+            this.number = value.length;
         }
     }
 
     toHTML() {
-        const HTMLs = [];
-        let HTML;
+        const HTML = document.createElement("span");
         switch (this.type) {
             case 0: case 1: case 2: case 3: case 4: case 5: {
-                for (let i = 0; i < this.number; i++) {
-                    HTML = document.createElement("span");
-                    HTML.classList.add(`char${this.type}`);
-                    HTML.classList.add(`number${this.number}`);
-                    HTML.innerHTML = this.char;
-                    HTMLs.push(HTML);
-                }
+                HTML.classList.add(`char${this.type}`);
+                HTML.classList.add(`number${this.number}`);
+                HTML.innerHTML = this.str;
                 break;
             }
             case 6: case 7: {
-                HTML = document.createElement("span");
                 HTML.classList.add(`char${this.type}`);
                 HTML.classList.add(
                     this.unmatched ? "unmatched" : `bracket-${this.level % 3}`
                 );
                 HTML.innerHTML = this.str;
-                HTMLs.push(HTML);
                 break;
             }
             case -1: {
-                for (let c of this.str) {
-                    HTML = document.createElement("span");
-                    HTML.classList.add("annotation");
-                    HTML.innerHTML = toHTMLchar(c);
-                    HTMLs.push(HTML);
-                }
+                HTML.classList.add("annotation");
+                HTML.innerHTML = toHTMLstring(this.str);
                 break;
             }
         }
-        this.HTMLs = HTMLs;
-        return HTMLs;
+        // HTML.container_Part = this; //useless in fact.
+        HTML.id = this.list_index // number --JS--> string
+        this.HTML = HTML;
+        return HTML;
     }
 
     current() {
-        for (let html of this.HTMLs) {
-            html.classList.add("current");
-        }
+        this.HTML.classList.add("current");
     }
     noncurrent() {
-        for (let html of this.HTMLs) {
-            html.classList.remove("current");
-        }
+        this.HTML.classList.remove("current");
     }
 }
 
@@ -100,15 +91,17 @@ function parse(code) {
     let stack = [];
     let unmatched_rights = [];
     let last = undefined;
+    let string_position;
 
     for (let i = 0; i < code.length; i++) {
+
         char = code[i];
         if (number) {
             if (char === last) {
                 number++;
                 continue;
             } else {
-                parts.push(new Part(type, number));
+                parts.push(new Part(type, number, string_position, parts.length));
                 number = undefined;
             }
         } else if (value) {
@@ -116,7 +109,7 @@ function parse(code) {
                 value += char;
                 continue;
             } else {
-                parts.push(new Part(-1, undefined, undefined, undefined, undefined, undefined, value));
+                parts.push(new Part(-1, undefined, string_position, parts.length, undefined, undefined, undefined, undefined, value));
                 value = undefined;
             }
         }
@@ -124,15 +117,16 @@ function parse(code) {
             type = operators.indexOf(char);
             last = char; 
             number = 1;
+            string_position = i;
         } else if (char === "[") {
             // type = 6;
             stack.push(parts.length);
-            parts.push(new Part(6, undefined, id_counter++, null, null, stack.length - 1));
+            parts.push(new Part(6, undefined, i, parts.length, id_counter++, null, null, stack.length - 1));
         } else if (char === "]") {
             // type = 7;
             if (!stack.length) {
                 log(111);
-                part = new Part(7, undefined, id_counter++, null, null, 0);
+                part = new Part(7, undefined, i, parts.length, id_counter++, null, null, 0);
                 part.unmatched = true;
                 unmatched_rights.push(part);
                 parts.push(part);
@@ -142,15 +136,16 @@ function parse(code) {
             left = parts[left_position];
             left.partner = id_counter;
             left.partner_position = parts.length;
-            parts.push(new Part(7, undefined, id_counter++, left.id, left_position, stack.length))
+            parts.push(new Part(7, undefined, i, parts.length, id_counter++, left.id, left_position, stack.length))
         } else if (!operators.includes(char)) {
             value = char;
+            string_position = i;
         }
     }
     if (number) {
-        parts.push(new Part(type, number));
+        parts.push(new Part(type, number, string_position, parts.length));
     } else if (value) {
-        parts.push(new Part(-1, undefined, undefined, undefined, undefined, undefined, value));
+        parts.push(new Part(-1, undefined, string_position, parts.length, undefined, undefined, undefined, undefined, value));
     }
 
     let unmatched_lefts = [];
