@@ -37,14 +37,14 @@ var code = code_box.innerText;
 
 
 code_box.addEventListener("input", function(event) {
-    /* let selection = window.getSelection();
+    let selection = window.getSelection();
     let range;
     let start, end;
     let start_part, end_part;
     let starts = [];
     let ends = [];
     for (let i = 0; i < selection.rangeCount; i++) {
-        range = selection.getRangeAt(i);
+        /* range = selection.getRangeAt(i);
         log(range.startContainer);
         start_part = parsed.parts[range.startContainer.id]; // string --JS--> number
         log(start_part);
@@ -52,32 +52,41 @@ code_box.addEventListener("input", function(event) {
         end_part = parsed.parts[range.endContainer.id]; // string --JS--> number
         end = end_part.string_position + range.endOffset;
         starts.push(start);
+        ends.push(end); */
+        range = selection.getRangeAt(i);
+        start_part = range.startContainer.parentElement.container_Part;
+        start = start_part.string_position + range.startOffset;
+        end_part = range.endContainer.parentElement.container_Part;
+        end = end_part.string_position + range.endOffset;
+        starts.push(start);
         ends.push(end);
     }
+    code = code_box.innerText;
+    parsed = parse(code);
     format_codebox();
     selection.removeAllRanges(); // is it necessary?
     let containers = [];
-    for (let part of varsed.parts) {
+    for (let part of parsed.parts) {
         for (let s of starts) {
-            if (part.string_position <= s < part.string_position + part.number) {
+            if (part.string_position <= s && s < part.string_position + part.number) {
                 containers[s] = part;
             }
         }
         for (let e of ends) {
-            if (part.string_position <= e < part.string_position + part.number) {
+            if (part.string_position <= e && e < part.string_position + part.number) {
                 containers[e] = part;
             }
         }
     }
+    log(containers);
     for (let i = 0; i < starts.length; i++) {
         range = document.createRange();
         start = containers[starts[i]];
         end = containers[ends[i]]
-        range.setStart(start.HTML, starts[i] - start.string_position);
-        range.setEnd(end.HTML, ends[i] - end.string_position);
+        range.setStart(start.HTML.firstChild, starts[i] - start.string_position);
+        range.setEnd(end.HTML.firstChild, ends[i] - end.string_position);
         selection.addRange(range);
-    } */
-    code = code_box.innerText;
+    }
 })
 
 

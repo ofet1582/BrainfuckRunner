@@ -69,8 +69,8 @@ class Part {
                 break;
             }
         }
-        // HTML.container_Part = this; //useless in fact.
-        HTML.id = this.list_index // number --JS--> string
+        HTML.container_Part = this; //useless in fact.
+        // HTML.id = this.list_index // number --JS--> string
         this.HTML = HTML;
         return HTML;
     }
@@ -92,7 +92,7 @@ function parse(code) {
     let unmatched_rights = [];
     let last = undefined;
     let string_position;
-
+    
     for (let i = 0; i < code.length; i++) {
 
         char = code[i];
