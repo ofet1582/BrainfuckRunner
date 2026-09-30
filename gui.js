@@ -35,29 +35,35 @@ var code = code_box.innerText;
     }
 }); */
 
-
+debug = 0;
 code_box.addEventListener("input", function(event) {
     let selection = window.getSelection();
     let range;
     let start, end;
-    let start_part, end_part;
     let starts = [];
     let ends = [];
+    log(selection, selection.getRangeAt(0));
+    if (debug >= 4554) {return;}
+    debug++;
+    let string_position;
     for (let i = 0; i < selection.rangeCount; i++) {
-        /* range = selection.getRangeAt(i);
-        log(range.startContainer);
-        start_part = parsed.parts[range.startContainer.id]; // string --JS--> number
-        log(start_part);
-        start = start_part.string_position + range.startOffset;
-        end_part = parsed.parts[range.endContainer.id]; // string --JS--> number
-        end = end_part.string_position + range.endOffset;
-        starts.push(start);
-        ends.push(end); */
         range = selection.getRangeAt(i);
-        start_part = range.startContainer.parentElement.container_Part;
-        start = start_part.string_position + range.startOffset;
-        end_part = range.endContainer.parentElement.container_Part;
-        end = end_part.string_position + range.endOffset;
+        if (range.startContainer.parentElement === code_box) {
+            start = range.startContainer._string_position_ + range.startOffset;
+        } else if (range.startContainer === code_box) {
+            start = range.startOffset;
+        } else {
+            start = range.startContainer.parentElement._string_position_ + range.startOffset + 
+                (range.startContainer.parentElement.parentElement.tagName === "DIV");
+        }
+        if (range.endContainer.parentElement === code_box) {
+            end = range.endContainer._string_position_ + range.endOffset;
+        } if (range.endContainer === code_box) {
+            end = end.startOffset;
+        } else {
+            end = range.endContainer.parentElement._string_position_ + range.endOffset + 
+                (range.endContainer.parentElement.parentElement.tagName === "DIV");
+        }
         starts.push(start);
         ends.push(end);
     }
@@ -65,26 +71,10 @@ code_box.addEventListener("input", function(event) {
     parsed = parse(code);
     format_codebox();
     selection.removeAllRanges(); // is it necessary?
-    let containers = [];
-    for (let part of parsed.parts) {
-        for (let s of starts) {
-            if (part.string_position <= s && s < part.string_position + part.number) {
-                containers[s] = part;
-            }
-        }
-        for (let e of ends) {
-            if (part.string_position <= e && e < part.string_position + part.number) {
-                containers[e] = part;
-            }
-        }
-    }
-    log(containers);
     for (let i = 0; i < starts.length; i++) {
         range = document.createRange();
-        start = containers[starts[i]];
-        end = containers[ends[i]]
-        range.setStart(start.HTML.firstChild, starts[i] - start.string_position);
-        range.setEnd(end.HTML.firstChild, ends[i] - end.string_position);
+        range.setStart(code_box/* .childNodes[starts[i]] */, starts[i]);  
+        range.setEnd(code_box/* .childNodes[ends[i]] */, ends[i]);
         selection.addRange(range);
     }
 })
@@ -143,28 +133,36 @@ run_button.addEventListener("click", function() {
     run();
 })
 
+const toHTMLchars = {
+    "\n": "<br>"
+}
+function toHTMLchar(char) {
+    let r = toHTMLchars[char];
+    if (! r) {
+        r = char;
+    }
+    return r;
+}
 function toHTMLstring(str) {
     let r = ""// return
-    let c;
+    let c, h;
     for (c of str) {
-        switch (c) {
-            case "\n": {
-                r += "<br>";
-                break;
-            }
-            default: {
-                r += c;
-            }
+        h = toHTMLchars[c];
+        if (! h) {
+            h = c;
         }
+        r += h;
     }
     return r;
 }
 
 function format_codebox() {
     code_box.innerHTML = "";
-    let part;
-    for (part of parsed.parts) {
-        code_box.appendChild(part.toHTML());
+    for (let part of parsed.parts) {
+        // code_box.appendChild(part.toHTML());
+        for (let HTML of part.toHTML()) {
+            code_box.appendChild(HTML);
+        }
     }
 }
 

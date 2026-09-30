@@ -1,10 +1,11 @@
 "use strict";
 
-var log = console.log;
+var log = console.log;// :D
 
-const MAX = 30000 - 1;
+const MAX = 30000 - 1;// BrainFuck带子长度为30000(据我所知)
 
 var tape, pointer, index, num, order, last;
+var running;
 var bracket;
 var id_counter = 0;// an unique id for every [ and ]
 var outputs = [];
@@ -12,6 +13,8 @@ var outputs = [];
 var parsed;
 
 var intervalID;// of the run loop.
+
+var input_number = false; // the number of inputs to be get right now.
 
 const operators = ["+", "-", ">", "<", ".", ",", "[", "]"];
 
@@ -47,7 +50,34 @@ class Part {
     }
 
     toHTML() {
-        const HTML = document.createElement("span");
+        let HTML;
+        this.HTMLs = [];
+        if (this.type === -1) {
+            for (let i = 0; i < this.str.length; i++) {
+                HTML = document.createElement("span");
+                HTML.innerHTML = toHTMLchar(this.str[i]);
+                HTML.classList.add("annotation");
+                HTML._string_position_ = this.string_position + i;
+                this.HTMLs.push(HTML);
+            }
+        } else {
+            for (let i = 0; i < this.number; i++) {
+                HTML = document.createElement("span");
+                HTML.innerText = this.char;
+                if (this.type === 6 || this.type === 7) {
+                    HTML.classList.add(`char${this.type}`);
+                    HTML.classList.add(
+                        this.unmatched ? "unmatched" : `bracket-${this.level % 3}`
+                    );
+                } else {
+                    HTML.classList.add(`char${this.type}`);
+                    HTML.classList.add(`number${this.number}`);
+                }
+                HTML._string_position_ = this.string_position + i;
+                this.HTMLs.push(HTML);
+            }
+        }
+     /*    const HTML = document.createElement("span");
         switch (this.type) {
             case 0: case 1: case 2: case 3: case 4: case 5: {
                 HTML.classList.add(`char${this.type}`);
@@ -72,14 +102,19 @@ class Part {
         HTML.container_Part = this; //useless in fact.
         // HTML.id = this.list_index // number --JS--> string
         this.HTML = HTML;
-        return HTML;
+        return HTML; */
+        return this.HTMLs;
     }
 
     current() {
-        this.HTML.classList.add("current");
+        for (let HTML of this.HTMLs) {
+            HTML.classList.add("current");
+        }
     }
     noncurrent() {
-        this.HTML.classList.remove("current");
+        for (let HTML of this.HTMLs) {
+            HTML.classList.remove("current");
+        }
     }
 }
 
@@ -183,6 +218,7 @@ function next() {
         }
     }
     order = 0;
+    running = false;
     end();
 }
 
@@ -237,9 +273,23 @@ function step() {
         }
         case 5: { // ,
             // Input
-            log("input", order.number);
-            next();
-            break;
+            // log("input", order.number);
+            // if (! input_number) {
+            //     input_number = order.number;
+            // }
+            // let inputs = get_input(input_number);
+            // if (inputs.length == input_number) {
+            //     tape[pointer] = inputs[input_number - 1];
+            //     input_number = false;
+            // } else if (inputs) {
+            //     tape[pointer] = inputs[inputs.length - 1];
+            //     input_number -= inputs.length;
+            //     return;
+            // } else {
+            //     return;
+            // }
+            // next();
+            // break;
 
         }
         case 6: { // [
@@ -280,10 +330,11 @@ function step() {
 function run() {
     init()
     code_box.setAttribute("contenteditable", false);
+    running = true;
     if (debug) {
         intervalID = setInterval(step, speed);
     } else {
-        while (order) {
+        while (running) {
             step();
         }
     }
